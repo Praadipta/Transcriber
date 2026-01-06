@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.venv/
+venv/
+env/
+ENV/
+
+# Node/build
+node_modules/
+dist/
+dist-ssr/
+
+# Local media/uploads
+uploads/
+backend/uploads/
+*.mp4
+*.wav
+*.mp3
+
+# Local binaries
+backend/bin/
+
+# Misc
+*.log
+.DS_Store
