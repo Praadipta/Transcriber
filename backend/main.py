@@ -5,6 +5,7 @@ import os
 import uuid
 from typing import Dict
 from transcriber import transcribe_video
+import re
 
 # Add local bin directory (where we put ffmpeg.exe) to PATH
 bin_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bin")
@@ -29,10 +30,22 @@ task_status: Dict[str, Dict] = {}
 
 import time
 
+def sanitize_filename(filename: str) -> str:
+    normalized = filename.replace("\\", "/")
+    base = os.path.basename(normalized).strip().strip(".")
+    if not base:
+        base = "upload"
+    return re.sub(r"[^A-Za-z0-9._-]", "_", base)
+
 @app.post("/upload")
 async def upload_video(background_tasks: BackgroundTasks, file: UploadFile = File(...)):
     task_id = str(uuid.uuid4())
-    file_location = os.path.join(UPLOAD_DIR, f"{task_id}_{file.filename}")
+    safe_name = sanitize_filename(file.filename or "")
+    file_location = os.path.join(UPLOAD_DIR, f"{task_id}_{safe_name}")
+    upload_root = os.path.abspath(UPLOAD_DIR)
+    file_path_abs = os.path.abspath(file_location)
+    if not file_path_abs.startswith(upload_root + os.path.sep):
+        raise HTTPException(status_code=400, detail="Invalid filename")
     
     # Save the uploaded file
     with open(file_location, "wb") as buffer:
@@ -55,7 +68,7 @@ async def get_status(task_id: str):
         raise HTTPException(status_code=404, detail="Task not found")
     return task_status[task_id]
 
-async def process_transcription(task_id: str, file_path: str):
+def process_transcription(task_id: str, file_path: str):
     try:
         task_status[task_id]["status"] = "transcribing"
         result = transcribe_video(file_path)
