@@ -1,4 +1,5 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
+import { API_BASE } from '../lib/api';
 
 interface FileUploadProps {
     onUploadSuccess: (taskId: string) => void;
@@ -21,7 +22,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({ onUploadSuccess }) => {
         formData.append('file', file);
 
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://localhost:8000/upload');
+        xhr.open('POST', `${API_BASE}/upload`);
 
         xhr.upload.onprogress = (event) => {
             if (event.lengthComputable) {

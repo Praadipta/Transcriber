@@ -41,6 +41,9 @@ npm run dev -- --host
 Backend: http://localhost:8000  
 Frontend: http://localhost:5173
 
+## Environment
+- `VITE_API_URL` (frontend): Base URL of the backend API (defaults to `http://localhost:8000`).
+
 ## Notes
 - Uploaded files are stored in `backend/uploads/`.
 - Long videos can take time; use the status endpoint to monitor progress.

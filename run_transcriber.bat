@@ -10,8 +10,8 @@ if not exist "%VENV_PY%" (
   exit /b 1
 )
 
-start "Transcriber Backend" cmd /k "cd /d ""%ROOT%backend"" && ""%VENV_PY%"" main.py"
-start "Transcriber Frontend" cmd /k "cd /d ""%ROOT%frontend"" && npm run dev -- --host"
+start "Transcriber Backend" /D "%ROOT%backend" "%VENV_PY%" main.py
+start "Transcriber Frontend" /D "%ROOT%frontend" npm run dev -- --host
 
 echo Servers starting...
 echo Backend: http://localhost:8000

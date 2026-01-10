@@ -20,7 +20,8 @@ try:
     result = transcribe_video(video_path)
     print("\nTranscription Success!")
     print("-" * 20)
-    print(result[:500] + "..." if len(result) > 500 else result)
+    text = result.get("text", "")
+    print(text[:500] + "..." if len(text) > 500 else text)
     print("-" * 20)
 except Exception as e:
     print(f"\nTranscription Failed: {e}")
