@@ -71,12 +71,19 @@ def _transcribe_single(client: Any, audio_path: str) -> Dict[str, Any]:
         )
 
     segments = []
-    for seg in (response.segments or []):
-        segments.append({
-            "start": getattr(seg, "start", 0),
-            "end": getattr(seg, "end", 0),
-            "text": getattr(seg, "text", ""),
-        })
+    for seg in (getattr(response, "segments", []) or []):
+        if isinstance(seg, dict):
+            segments.append({
+                "start": seg.get("start", 0),
+                "end": seg.get("end", 0),
+                "text": seg.get("text", ""),
+            })
+        else:
+            segments.append({
+                "start": getattr(seg, "start", 0),
+                "end": getattr(seg, "end", 0),
+                "text": getattr(seg, "text", ""),
+            })
 
     return {
         "text": response.text,
